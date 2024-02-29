@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <meta charset="utf-8">
+          <title>Salīdzināšana</title>
+        <style type="text/css" rel="stylesheet">
+          html, body{
+            background-color: #DBAF27;
+            font-family: "Helvetica", "Arial", sans-serif;
+          }
+          h1{
+            text-align: center;
+            margin-bottom: 100px;
+          }
+          .poster{
+            text-align: center;
+          }
+          .info{
+            text-align: center;
+          }
+          .atpakal{
+            text-align: center;
+            margin-bottom: 20px;
+          }
+        </style>
+     </head>
+     <body>
+       <h1>Filmu salīdzināšana</h1>
+            <table1>
+          {% for f in rezultats1 %}
+            <tr>
+              <div class="info">
+              <div class="poster">
+              <img src= {{ f[14] }}>
+              </div>
+              <h5>Nosaukums:</h5>{{f[1]}}
+              <h5>Aktīvais gads:</h5>{{f[2]}}
+              <h5>Vērtējums:</h5>{{f[3]}}
+              <h5>Izlaišanas gads:</h5>{{f[4]}}
+              <h5>Garums:</h5>{{f[5]}}
+              <h5>Žanri:</h5>{{f[6]}}
+              <h5>Režisors:</h5>{{f[7]}}
+              <h5>Rakstītājs:</h5>{{f[8]}}
+              <h5>Aktieri:</h5>{{f[9]}}
+              <h5>Sižets:</h5>{{f[10]}}
+              <h5>Valodas:</h5>{{f[11]}}
+              <h5>Izcelsmes valsts:</h5>{{f[12]}}
+              <h5>Sasniegumi:</h5>{{f[13]}}
+            </tr>
+            {% endfor %}
+            </table1><br><br><br><br>
+               <table2>
+             {% for f in rezultats2%}
+               <tr>
+                 <div class="poster">
+                 <img src= {{ f[14] }}>
+                 </div>
+                 <h5>Nosaukums:</h5>{{f[1]}}
+                 <h5>Aktīvais gads:</h5>{{f[2]}}
+                 <h5>Vērtējums:</h5>{{f[3]}}
+                 <h5>Izlaišanas gads:</h5>{{f[4]}}
+                 <h5>Garums:</h5>{{f[5]}}
+                 <h5>Žanri:</h5>{{f[6]}}
+                 <h5>Režisors:</h5>{{f[7]}}
+                 <h5>Rakstītājs:</h5>{{f[8]}}
+                 <h5>Aktieri:</h5>{{f[9]}}
+                 <h5>Sižets:</h5>{{f[10]}}
+                 <h5>Valodas:</h5>{{f[11]}}
+                 <h5>Izcelsmes valsts:</h5>{{f[12]}}
+                 <h5>Sasniegumi:</h5>{{f[13]}}
+               </tr><br>
+               </div>
+               {% endfor %}
+               </table2><br><br><br><br>
+       <div class="atpakal">
+             <a href="/sakums_lietotajs"><button type = "button">Atpakaļ</button></a>
+       </div>
+     </body>
+</html>

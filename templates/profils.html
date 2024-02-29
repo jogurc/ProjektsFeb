@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <meta charset="utf-8">
+          <title>Profils</title>
+        <style type="text/css" rel="stylesheet">
+          html, body{
+            background-color: #DBAF27;
+            font-family: "Helvetica", "Arial", sans-serif;
+          }
+          h1{
+            text-align: center;
+          }
+          .login{
+            text-align: right;
+            margin-right: 100px;
+          }
+          .profils{
+            text-align: left;
+            padding-left: 50px;
+          }
+          .tab{}
+        </style>
+     </head>
+     <body>
+          <h1>Profils</h1><br>
+       <div class="profils">
+          <div class="tab">
+            <table>
+              {% for kont in rezultats %}
+          <tr style="width: 60%">
+            <h5>Lietotājvārds</h5>{{kont[1]}}
+            <h5>Meklētās filmas</h5>{{kont[3]}}
+            <h5>Mīļākās filmas</h5>{{kont[4]}}
+          </tr>
+          </div>
+         {% endfor %}
+         </table>
+      <div class="login">
+        <a href="/salidzinat"><button type = "button">Salīdzināt filmas</button></a><br><br>
+        <a href="/sakums_lietotajs"><button type = "button">Atpakaļ</button></a>
+      </div>
+     </body>
+
+</html>

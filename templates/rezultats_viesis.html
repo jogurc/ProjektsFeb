@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Rezultāts</title>
+     <style type="text/css" rel="stylesheet">
+       html, body{
+         background-color: #DBAF27;
+         font-family: "Helvetica", "Arial", sans-serif;
+       }
+       .poster{
+         text-align: center;
+       }
+       .info{
+         text-align: center;
+       }
+       .atpakal{
+         text-align: center;
+       }
+     </style>
+  </head>
+  <body>
+    <table>
+  {% for f in rezultats%}
+    <tr>
+      <div class="poster">
+      <img src= {{ f[14] }}><br>
+      </div>
+      <div class="info">
+      <h5>Nosaukums:</h5>{{f[1]}}<br>
+      <h5>Aktīvais gads:</h5>{{f[2]}}<br>
+      <h5>Vērtējums:</h5>{{f[3]}}<br>
+      <h5>Izlaišanas gads:</h5>{{f[4]}}<br>
+      <h5>Garums:</h5>{{f[5]}}<br>
+      <h5>Žanri:</h5>{{f[6]}}<br>
+      <h5>Režisors:</h5>{{f[7]}}<br>
+      <h5>Rakstītājs:</h5>{{f[8]}}<br>
+      <h5>Aktieri:</h5>{{f[9]}}<br>
+      <h5>Sižets:</h5>{{f[10]}}<br>
+      <h5>Valodas:</h5>{{f[11]}}<br>
+      <h5>Izcelsmes valsts:</h5>{{f[12]}}<br>
+      <h5>Sasniegumi:</h5>{{f[13]}}<br>
+      </div>
+    </tr>
+    {% endfor %}
+    </table><br><br><br>
+    <div class="atpakal">
+    <a href="/"><button type = "button">Atpakaļ</button></a><br><br><br><br>
+    </div>
+  </body>
+</html>
