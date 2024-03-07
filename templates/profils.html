@@ -31,7 +31,11 @@
           <tr style="width: 60%">
             <h5>Lietotājvārds</h5>{{kont[1]}}
             <h5>Meklētās filmas</h5>{{kont[3]}}
-            <h5>Mīļākās filmas</h5>{{kont[4]}}
+            {% if kont[4] %}
+              <h5>Mīļākās filmas</h5>{% for link in kont[4].split(', ') %}<a href="http://www.omdbapi.com/?t={{ link }}&apikey=ac26b569">{{ link }}<br><br></a>{% endfor %}
+            {% else %}
+              <h5>Mīļākās filmas</h5>Nav saglabātu filmu
+            {% endif %}
           </tr>
           </div>
          {% endfor %}

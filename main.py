@@ -2,6 +2,7 @@ import requests
 from flask import Flask, render_template, request, redirect
 import sqlite3
 import json
+from argon2 import PasswordHasher
 
 def select_sql(cmd, vals=None):
   conn = sqlite3.connect('flask.db')
@@ -43,6 +44,7 @@ def sakums_admin():
 
 @app.route("/sakums_lietotajs")
 def sakums_lietotajs():
+  print(select_sql("SELECT * FROM Session"))
   return render_template("sakums_lietotajs.html")
 
 @app.route("/konts_registreties")
@@ -55,9 +57,11 @@ def konts_registreties_apstrade():
   if request.method == "POST":
     jauns_lietotajs["lietotajvards"] = request.form["lietotajvards"]
     jauns_lietotajs["parole"] = request.form["parole"]
+    ph = PasswordHasher()
+    hash = ph.hash(jauns_lietotajs["parole"].encode())
     insert_sql("INSERT INTO Lietotaji (lietotajvards, parole, filmas_mekletas, filmas_saglabatas) VALUES (?, ?, ?, ?)",[
       jauns_lietotajs["lietotajvards"],
-      jauns_lietotajs["parole"],
+      hash,
       0,
       None
       ])
@@ -72,31 +76,42 @@ def konts_pieslegties_redirect():
 @app.route("/konts_pieslegties_apstrade", methods = ["POST", "GET"])
 def konts_pieslegties_apstrade():
     pieslegties_konts = {}
-    lietotajvards_result = None 
-    parole_result = None 
     if request.method == "POST":
       pieslegties_konts["lietotajvards"] = request.form["lietotajvards"]
       pieslegties_konts["parole"] = request.form["parole"]
-      lietotajvards_result = select_sql("SELECT lietotajvards FROM Lietotaji WHERE lietotajvards = ?", (pieslegties_konts["lietotajvards"],))
-      parole_result = select_sql("SELECT parole FROM Lietotaji WHERE parole = ?", (pieslegties_konts["parole"],))
-      if lietotajvards_result and parole_result:
-        select_sql("DROP TABLE IF EXISTS Session")
-        select_sql("CREATE TABLE IF NOT EXISTS Session (\
-        konts_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
-        lietotajvards TEXT NOT NULL, \
-        parole TEXT NOT NULL, \
-        filmas_mekletas INT, \
-        filmas_saglabatas TEXT)")
-        insert_sql("INSERT INTO Session (lietotajvards, parole, filmas_mekletas, filmas_saglabatas) VALUES (?, ?, ?, ?)" ,[
-          pieslegties_konts["lietotajvards"],
-          pieslegties_konts["parole"],
-          0,
-          None
-        ])
-        return redirect("/sakums_lietotajs")
-      else: 
-        return render_template("konts_pieslegties.html")
-    else:
+      if pieslegties_konts["lietotajvards"] and pieslegties_konts["parole"]:
+        pw_hasher = PasswordHasher()
+        
+        conn = sqlite3.connect('flask.db')
+        c = conn.cursor()
+        query = "SELECT parole FROM Lietotaji WHERE lietotajvards = ?"
+        hash_parole = c.execute(query, (pieslegties_konts["lietotajvards"],)).fetchall()
+        print(type(hash_parole), hash_parole)
+
+        hash_parole_bytes = bytes("".join(hash_parole[0]), "utf-8")
+        print(type(hash_parole_bytes), hash_parole_bytes)
+        pieslegties_parole_bytes = bytes(pieslegties_konts["parole"], "utf-8")
+        print(type(pieslegties_parole_bytes), pieslegties_parole_bytes)
+
+        if pw_hasher.verify(hash_parole_bytes, pieslegties_parole_bytes):
+        
+          select_sql("DROP TABLE IF EXISTS Session")
+          select_sql("CREATE TABLE IF NOT EXISTS Session (\
+          konts_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
+          lietotajvards TEXT NOT NULL, \
+          parole TEXT NOT NULL, \
+          filmas_mekletas INT, \
+          filmas_saglabatas TEXT)")
+          insert_sql("INSERT INTO Session (lietotajvards, parole, filmas_mekletas, filmas_saglabatas) VALUES (?, ?, ?, ?)" ,[
+            pieslegties_konts["lietotajvards"],
+            pieslegties_parole_bytes,
+            0,
+            None
+          ])
+        conn.commit()
+        conn.close()
+      return redirect("/sakums_lietotajs")
+    else: 
       return render_template("konts_pieslegties.html")
 
 @app.route("/konts_pieslegties_admin")
